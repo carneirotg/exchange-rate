@@ -1,7 +1,6 @@
 package com.code.service.exchange.rest;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -36,7 +35,14 @@ public class ExchangeRateController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = {"/latest"}, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Rate find() throws NoResourceException{
-		return rRepo.findFirstByOrderByCreatedDesc();
+		
+		Rate r = rRepo.findFirstByOrderByCreatedDesc();
+		
+		if (r == null){
+			throw new NoResourceException();
+		}
+		
+		return r;
 	}
 	
 	
@@ -50,16 +56,16 @@ public class ExchangeRateController {
 	 */
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = {"/history"}, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public List<Rate> findHistorical(@RequestParam("start_date") @DateTimeFormat(pattern = "yyy-MM-dd") Date startDate
-								   , @RequestParam("end_date") @DateTimeFormat(pattern = "yyy-MM-dd")   Date endDate) 
+	public List<Rate> findHistorical(@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate
+								   , @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd")   LocalDate endDate) 
 					  throws InvalidArgumentException{
 		log.debug("find called startDate: ["+startDate+"] and endDate: ["+endDate+"]");
 		
-		if (startDate.getTime() > endDate.getTime()){
+		if (startDate.isAfter(endDate)){
 			throw new InvalidArgumentException("The start_date should be before the end_date");
 		}
 		
-		List<Rate> rates = rRepo.findAllByCreatedBetween(startDate, endDate);
+		List<Rate> rates = rRepo.findAllByCreatedBetweenOrderByCreatedAsc(startDate, endDate);
 		
 		return rates;
 	}

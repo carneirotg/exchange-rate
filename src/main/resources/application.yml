@@ -1,0 +1,39 @@
+#logger
+logging:
+  level: 
+    ROOT: INFO
+
+#datasource    
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:file:~/test
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+#profiles    
+  profiles:
+    active: mock
+  application:
+    name: exchange-rate service
+  
+    
+#business
+scheduler:
+  fetchRatePeriod: 60000    
+  
+
+---
+spring:
+  profiles: mock
+scheduler:
+  forexUrl: https://demo9456237.mockable.io/ 
+ 
+---
+spring:
+  profiles: prd
+scheduler:
+  forexUrl: http://data.fixer.io/api/latest?access_key=30e05e0060914a45604f2257763769f0&format=1&symbols=USD

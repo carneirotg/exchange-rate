@@ -10,7 +10,7 @@ import com.code.service.exchange.repository.ExchangeRateRepository;
 public class ExchangeRateConfig {
   	
   	@Bean
-  	public ExchangeRateRepository robotRepository(){
+  	public ExchangeRateRepository rRepo(){
   		return Mockito.mock(ExchangeRateRepository.class);
   	}
 }

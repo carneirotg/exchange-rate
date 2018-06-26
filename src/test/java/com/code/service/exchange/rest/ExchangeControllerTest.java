@@ -3,6 +3,7 @@ package com.code.service.exchange.rest;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.Before;
@@ -54,12 +55,12 @@ public class ExchangeControllerTest {
 	private Rate createRate() {
 		Rate r = new Rate();
 		r.setCreated(LocalDate.now());
-		r.setRate(1.65);
+		r.setRate(BigDecimal.valueOf(1.65));
 		return r;
 	}
 	
 	@Test
-	public void get_latestRate_withSuccess() throws Exception{
+	public void find_LatestRate_WithSuccess() throws Exception{
 		
 		Rate rate = createRate();
 		
@@ -73,7 +74,17 @@ public class ExchangeControllerTest {
 	}
 	
 	@Test
-	public void get_historicalRate_withSuccess() throws Exception{
+	public void find_LatestRate_ThrowExceptionNotFound() throws Exception{
+		
+		when(rRepo.findFirstByOrderByCreatedDesc()).thenReturn(null);
+		
+		this.mockMvc.perform(get("/exchangerate/v1/rates/latest")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
+	
+	@Test
+	public void findHistorical_WithValidStartDateAndEndDate_WithSuccess() throws Exception{
 		
 		String startDate = "2018-06-21";
 		String endDate   = "2018-06-22";
@@ -84,7 +95,7 @@ public class ExchangeControllerTest {
 	}
 
 	@Test
-	public void get_historicalRate_failWithStartDateAfterEndDate() throws Exception{
+	public void findHistorical_WithStartDateAfterEndDate_fail() throws Exception{
 		String startDate = "2018-06-25";
 		String endDate   = "2018-06-22";
 		

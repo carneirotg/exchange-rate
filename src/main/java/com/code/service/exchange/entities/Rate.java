@@ -1,5 +1,6 @@
 package com.code.service.exchange.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -23,8 +24,18 @@ public class Rate {
 	@Column
 	private LocalDate created;
 	
-	@Column
-	private double rate;
+	@Column(precision = 9, scale = 4)
+	private BigDecimal rate;
+	
+	public Rate(){
+		
+	}
+	
+	public Rate(LocalDate created, BigDecimal rate){
+		this.created = created;
+		this.rate = rate;
+	}
+	
 
 	public LocalDate getCreated() {
 		return created;
@@ -34,11 +45,11 @@ public class Rate {
 		this.created = created;
 	}
 
-	public double getRate() {
+	public BigDecimal getRate() {
 		return rate;
 	}
 
-	public void setRate(double rate) {
+	public void setRate(BigDecimal rate) {
 		this.rate = rate;
 	}
 
