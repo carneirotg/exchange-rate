@@ -43,10 +43,6 @@ public class ExchangeRateScheduler {
 		Rate rate = new Rate();
 		rate.setCreated(LocalDate.parse(response.getBody().getDate()));
 		
-		System.out.println(response.getBody().getRates().get("USD"));
-		System.out.println(new BigDecimal(response.getBody().getRates().get("USD")));
-		System.out.println(BigDecimal.valueOf(response.getBody().getRates().get("USD")));
-		
 		rate.setRate(BigDecimal.valueOf(response.getBody().getRates().get("USD")));
 		
 		rRepo.save(rate);
