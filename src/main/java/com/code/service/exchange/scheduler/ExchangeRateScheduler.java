@@ -1,8 +1,6 @@
 package com.code.service.exchange.scheduler;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.time.Instant;
 import java.time.LocalDate;
 
 import org.slf4j.Logger;
@@ -14,8 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.code.service.exchange.entities.ExchangeRate;
 import com.code.service.exchange.entities.ForexRate;
-import com.code.service.exchange.entities.Rate;
 import com.code.service.exchange.repository.ExchangeRateRepository;
 
 @Component
@@ -37,10 +35,10 @@ public class ExchangeRateScheduler {
 
 	@Scheduled(fixedRateString = "${scheduler.fetchRatePeriod}")
 	public void checkCurrencyRateEURToUSD(){
-		log.info("Polling server in ["+fetchRatePeriod+"] ms to retrieve exchange rate...");
+		log.info("Polling server in [{}] ms to retrieve exchange rate...", fetchRatePeriod);
 		ResponseEntity<ForexRate> response = rest.getForEntity(getForexUrl(), ForexRate.class);
 		
-		Rate rate = new Rate();
+		ExchangeRate rate = new ExchangeRate();
 		rate.setCreated(LocalDate.parse(response.getBody().getDate()));
 		
 		rate.setRate(BigDecimal.valueOf(response.getBody().getRates().get("USD")));

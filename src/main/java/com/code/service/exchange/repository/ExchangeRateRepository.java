@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.code.service.exchange.entities.Rate;
+import com.code.service.exchange.entities.ExchangeRate;
 
 @Repository
-public interface ExchangeRateRepository extends CrudRepository<Rate, Long>{
+public interface ExchangeRateRepository extends CrudRepository<ExchangeRate, Long>{
 
-	Rate findFirstByOrderByCreatedDesc();
+	ExchangeRate findFirstByOrderByCreatedDesc();
 	
-	List<Rate> findAllByCreatedBetweenOrderByCreatedAsc(LocalDate startDate, LocalDate endDate);
+	List<ExchangeRate> findAllByCreatedBetweenOrderByCreatedAsc(LocalDate startDate, LocalDate endDate);
 	
 }

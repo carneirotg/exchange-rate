@@ -1,5 +1,7 @@
 package com.code.service.exchange.rest;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -23,7 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.code.service.exchange.base.ExchangeRateConfig;
-import com.code.service.exchange.entities.Rate;
+import com.code.service.exchange.entities.ExchangeRate;
 import com.code.service.exchange.repository.ExchangeRateRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,8 +54,8 @@ public class ExchangeControllerTest {
 
 	}
 	
-	private Rate createRate() {
-		Rate r = new Rate();
+	private ExchangeRate createRate() {
+		ExchangeRate r = new ExchangeRate();
 		r.setCreated(LocalDate.now());
 		r.setRate(BigDecimal.valueOf(1.65));
 		return r;
@@ -62,7 +64,7 @@ public class ExchangeControllerTest {
 	@Test
 	public void find_LatestRate_WithSuccess() throws Exception{
 		
-		Rate rate = createRate();
+		ExchangeRate rate = createRate();
 		
 		when(rRepo.findFirstByOrderByCreatedDesc()).thenReturn(rate);
 		

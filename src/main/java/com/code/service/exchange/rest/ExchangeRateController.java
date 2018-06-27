@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.code.service.exchange.entities.Rate;
+import com.code.service.exchange.entities.ExchangeRate;
 import com.code.service.exchange.repository.ExchangeRateRepository;
 
 @RestController
@@ -34,9 +34,9 @@ public class ExchangeRateController {
 	 */
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = {"/latest"}, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Rate find() throws NoResourceException{
+	public ExchangeRate find() throws NoResourceException{
 		
-		Rate r = rRepo.findFirstByOrderByCreatedDesc();
+		ExchangeRate r = rRepo.findFirstByOrderByCreatedDesc();
 		
 		if (r == null){
 			throw new NoResourceException();
@@ -56,18 +56,16 @@ public class ExchangeRateController {
 	 */
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = {"/history"}, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public List<Rate> findHistorical(@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate
+	public List<ExchangeRate> findHistorical(@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate
 								   , @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd")   LocalDate endDate) 
 					  throws InvalidArgumentException{
-		log.debug("find called startDate: ["+startDate+"] and endDate: ["+endDate+"]");
+		log.debug("find called startDate: [{}] and endDate: [{}]", startDate, endDate);
 		
 		if (startDate.isAfter(endDate)){
 			throw new InvalidArgumentException("The start_date should be before the end_date");
 		}
 		
-		List<Rate> rates = rRepo.findAllByCreatedBetweenOrderByCreatedAsc(startDate, endDate);
-		
-		return rates;
+		return rRepo.findAllByCreatedBetweenOrderByCreatedAsc(startDate, endDate);
 	}
 	
 }

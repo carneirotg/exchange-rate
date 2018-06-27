@@ -9,26 +9,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.code.service.exchange.entities.Rate;
+import com.code.service.exchange.entities.ExchangeRate;
 
 @RunWith(SpringRunner.class)
 public class ExchangeRateRepositoryTest {
 
-//	Rate findFirstByOrderByCreatedDesc();
-//	
-//	List<Rate> findAllByCreatedBetween(Date startDate, Date endDate);
-	
 	@MockBean
 	private ExchangeRateRepository rRepo;
 	
-	private Rate createRate(BigDecimal value) {
-		Rate r = new Rate();
+	private ExchangeRate createRate(BigDecimal value) {
+		ExchangeRate r = new ExchangeRate();
 		r.setCreated(LocalDate.now());
 		r.setRate(value);
 		return r;
@@ -36,11 +31,11 @@ public class ExchangeRateRepositoryTest {
 	
 	@Test
 	public void findFirstByOrderByCreatedDesc_LastInserted_WithSuccess(){
-		Rate r1 = createRate(BigDecimal.valueOf(1.67));
+		ExchangeRate r1 = createRate(BigDecimal.valueOf(1.67));
 		when(rRepo.findFirstByOrderByCreatedDesc()).thenReturn(r1);
 		assertThat(rRepo.findFirstByOrderByCreatedDesc(), is(r1));
 		
-		Rate r2 = createRate(BigDecimal.valueOf(1.53));
+		ExchangeRate r2 = createRate(BigDecimal.valueOf(1.53));
 		when(rRepo.findFirstByOrderByCreatedDesc()).thenReturn(r2);
 		assertThat(rRepo.findFirstByOrderByCreatedDesc(), is(r2));
 		
@@ -52,17 +47,17 @@ public class ExchangeRateRepositoryTest {
 		LocalDate startDate = LocalDate.of(2018, 6, 24);
 		LocalDate endDate = LocalDate.of(2018, 6, 25);
 		
-		List<Rate> rates = new ArrayList<Rate>();
-		rates.add(new Rate(startDate, new BigDecimal(1.37)));
-		rates.add(new Rate(startDate, new BigDecimal(1.56)));
-		rates.add(new Rate(endDate, new BigDecimal(1.51)));
-		rates.add(new Rate(endDate, new BigDecimal(1.65)));
+		List<ExchangeRate> rates = new ArrayList<ExchangeRate>();
+		rates.add(new ExchangeRate(startDate, new BigDecimal(1.37)));
+		rates.add(new ExchangeRate(startDate, new BigDecimal(1.56)));
+		rates.add(new ExchangeRate(endDate, new BigDecimal(1.51)));
+		rates.add(new ExchangeRate(endDate, new BigDecimal(1.65)));
 		
 		when(rRepo.findAllByCreatedBetweenOrderByCreatedAsc(startDate, endDate)).thenReturn(rates);
 		
 		assertThat(rates.size(), is(4));
 		
-		List<Rate> ratesPersisted = rRepo.findAllByCreatedBetweenOrderByCreatedAsc(startDate, endDate);
+		List<ExchangeRate> ratesPersisted = rRepo.findAllByCreatedBetweenOrderByCreatedAsc(startDate, endDate);
 		
 		assertThat(ratesPersisted.get(0).getCreated(), is(startDate));
 		assertThat(ratesPersisted.get(0).getRate(), is(new BigDecimal(1.37)));
